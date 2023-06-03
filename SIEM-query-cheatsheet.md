@@ -1,21 +1,21 @@
-SIEM/Logging query cheatsheet
+# SIEM/Logging query cheatsheet
 Last updated: 2023/06/03
 
-# Essential tables/partitions/index
+## Essential tables/partitions/index
 
 |Platform | Howto |
 |---------|-------|
-|Azure KQL|`* | summarize count() by $table`|
+|Azure KQL| `* | summarize count() by $table`|
 |Elastic| `curl http://localhost:9200/_cat/indices?v`|
 |Graylog|``|
-|Splunk|`| tstats count where index=* by index`, `| tstats count WHERE index=* OR index=_* BY index,host`, `| eventcount summarize=false index=* | dedup index | fields index` |
-|Sumologic|`* | count by _index`, `* | count by _sourceCategory`|
+|Splunk| `| tstats count where index=* by index`, `| tstats count WHERE index=* OR index=_* BY index,host`, `| eventcount summarize=false index=* | dedup index | fields index` |
+|Sumologic| `* | count by _index`, `* | count by _sourceCategory`|
 
-# Classical operators
+## Classical operators
 
 * or/and
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|or/and (case-sensitive)|
 |Graylog|or/and (case-insensitive)|
 |Kibana|or/and (case-insensitive)|
@@ -23,8 +23,8 @@ Last updated: 2023/06/03
 |Sumologic| or/and (case-insensitive)|
 
 * not
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`E | where a == "b"`|
 |Graylog|`not`|
 |Kibana| `not` (case-insensitive)|
@@ -32,8 +32,8 @@ Last updated: 2023/06/03
 |Sumologic|`!E`, `E | where a != b`|
 
 * where
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`E | where a == "b"`|
 |Elastic| |
 |Graylog|``|
@@ -41,8 +41,8 @@ Last updated: 2023/06/03
 |Sumologic|`E | where a = "b"`|
 
 * count
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`E | summarize count() by field`|
 |Elastic| |
 |Graylog|aggregation through views panel only|
@@ -50,8 +50,8 @@ Last updated: 2023/06/03
 |Sumologic|`E | count by field`|
 
 * distinct count
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`E | summarize dcount(field)`|
 |Elastic| |
 |Graylog|``|
@@ -60,8 +60,8 @@ Last updated: 2023/06/03
 
 
 * contains
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`T | where field contains "word"`, has, startswith, endswith|
 |Elastic| |
 |Graylog|`field:/.*word.*/` `"word"`|
@@ -70,8 +70,8 @@ Last updated: 2023/06/03
 |Sumologic|`field=*word*` `"word"`|
 
 * limit
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|limit, take, top|
 |Elastic||
 |Graylog||
@@ -79,8 +79,8 @@ Last updated: 2023/06/03
 |Sumologic|limit|
 
 * wildcard extract, regex extract
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`T | extend _ProcessName=extract('"process name": "(.*"', 1, ExtendedProperties)`, `T | extend _ProcessName=extract("$.process name", ExtendedProperties)`, parse_json|
 |Elastic|[JSON processor](https://www.elastic.co/guide/en/elasticsearch/reference/current/json-processor.html)|
 |Graylog||
@@ -88,8 +88,8 @@ Last updated: 2023/06/03
 |Sumologic|parse, parse regex, parse json|
 
 * time slicing
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`T | summarize count() by bin(TimeGenerated, 1h), field`|
 |Elastic| |
 |Graylog||
@@ -97,8 +97,8 @@ Last updated: 2023/06/03
 |Sumologic|`E | timeslice 1h | count _timeslice,field`, `E | timeslice 1h | count _timeslice,field | transpose row _timeslice column field`|
 
 * rename field
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`T | project-rename new_column_name = column_name`|
 |Elastic| |
 |Graylog||
@@ -120,15 +120,15 @@ https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/ASN_L
 https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/Geo-Lookup
 
 * case-sensitivity
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`=~` (case insensitive), `==` (case sensitive)|
 |Elastic| |
 |Graylog||
 |Splunk||
 |Sumologic|first line case insensitive, case sensitive after pipe|
 
-# Parsing
+## Parsing
 
 * Azure KQL: normalizing
 https://docs.microsoft.com/en-us/azure/sentinel/normalization
@@ -140,12 +140,12 @@ https://docs.splunk.com/Documentation/CIM/5.1.1/User/Overview
 https://help.sumologic.com/Cloud_SIEM_Enterprise/CSE_Schema/CSE_Normalized_Classification
 
 
-# Metadata fields
+## Metadata fields
 
 Depending on platform, those may exist all the time or not.
 
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|$table, _ResourceId, SubscriptionId, Computer, * (full message), _TimeReceived, TimeGenerated, _IsBillable|
 |Graylog||
 |Kibana|@timestamp, _time, _index, _id|
@@ -156,7 +156,7 @@ https://docs.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns
 https://docs.splunk.com/Documentation/Splunk/latest/Data/Aboutdefaultfields
 https://help.sumologic.com/05Search/Get-Started-with-Search/Search-Basics/Built-in-Metadata
 
-# Field match
+## Field match
 
 Before pipe
 * key=value
@@ -175,19 +175,19 @@ field name case sensitive: Azure KQL
 field name case insensitive: Sumologic
 
 
-# Full text search
+## Full text search
 
 * Before pipe
-| <!-- --> | <!-- --> |
-|----------|----------|
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`search "word1" or "word2"`, `search in (T) "word"`|
 |Graylog|`"word1" or "word2"`|
 |Splunk|`"word1" OR "word2"`|
 |Sumologic|`"word1" or "word2"`|
 
-# Volume, eps
-| <!-- --> | <!-- --> |
-|----------|----------|
+## Volume, eps
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|See Data collection health monitoring workbook|
 |Graylog||
 |Splunk|`index=_internal source=*metrics.log group=per_index_thruput | eval GB=kb/1024/1024 | timechart span=1d sum(GB) as GB | eval GB=round(GB,2)`, `| tstats count where index=* by  _time span=1s`|
@@ -195,24 +195,24 @@ field name case insensitive: Sumologic
 https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index
 https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index/Log_and_Tracing_Data_Volume_Index
 
-# Last seen
-| <!-- --> | <!-- --> |
-|----------|----------|
+## Last seen
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|See Data collection health monitoring workbook, `T | summarize max(TimeGenerated)`|
 |Graylog||
 |Splunk|`| tstats latest(_time) as latest where (index=* earliest=-1mon@mon  latest=-0h@h) by index host source sourcetype | convert ctime(latest)`|
 |Sumologic|`E | first(_messagetime) as last_seen1 | formatDate(fromMillis(last_seen1),"yyyy-MM-dd'T'HH:mm:ss.SSSZ") as last_seen`|
 
-# Logs Audit
-| <!-- --> | <!-- --> |
-|----------|----------|
+## Logs Audit
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`LAQueryLogs` https://learn.microsoft.com/en-us/azure/sentinel/audit-sentinel-data|
 |Elastic|<clustername>_audit.json file: https://www.elastic.co/guide/en/elasticsearch/reference/current/enable-audit-logging.html, https://www.elastic.co/guide/en/elasticsearch/reference/current/auditing-search-queries.html|
 |Graylog||
 |Splunk|`index=_audit` https://docs.splunk.com/Documentation/Splunk/9.0.4/Security/AuditSplunkactivity|
 |Sumologic|`_view=sumologic_search_usage_per_query`, `index=sumologic_audit` https://help.sumologic.com/docs/manage/security/audit-index/|
 
-# Sharing
+## Sharing
 
 Most of the time you can copy/paste the search query, but you may miss some settings like timeperiod.
 Some tools allow to share query as shortcut code or url:
@@ -221,7 +221,7 @@ Kibana: [url](https://www.elastic.co/guide/en/kibana/master/reporting-getting-st
 Sentinel: [url, query or email](https://azurecloudai.blog/2021/05/26/how-to-easily-share-your-azure-sentinel-queries-with-the-community/)
 Sumologic: [_code or url](https://help.sumologic.com/docs/search/get-started-with-search/search-basics/share-link-to-search/)
 
-# Logs file import
+## Logs file import
 
 Sometimes, you have raw text logs files to analyze and ideally in the same tools than live logs.
 Most of the time it is possible to import text files aka csv or json. Some platform may even allow to load standalone evt/evtx files.
@@ -255,7 +255,7 @@ https://help.sumologic.com/docs/send-data/installed-collectors/sources/local-fil
 https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/upload-logs/
 
 
-# Data purging
+## Data purging
 
 If dev or testing environment, you may want to clear data fully or partially.
 In production, that should never happens or nearly as else we may at risk of losing audit trail. At least, not without losing logs immutability/Write Once Read Many (WORM)/tampering protection. If possible, you still want to ensure proper backup and audit trail.
@@ -277,7 +277,7 @@ In production, that should never happens or nearly as else we may at risk of los
 
 
 
-# References
+## References
 
 * Azure KQL
   * https://docs.microsoft.com/en-us/azure/data-explorer/kql-quick-reference
@@ -324,7 +324,7 @@ https://help.sumologic.com/05Search/Search-Cheat-Sheets/Log-Operators-Cheat-Shee
 https://help.sumologic.com/05Search/Search-Cheat-Sheets/grep-to-Searching-with-Sumo-Cheat-Sheet
 https://cheatography.com/tme520/cheat-sheets/sumo-logic/
 
-# Glossary
+## Glossary
 
 T: Table
 E: Expression
