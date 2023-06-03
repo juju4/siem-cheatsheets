@@ -14,6 +14,7 @@ Last updated: 2023/06/03
 ## Classical operators
 
 * or/and
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|or/and (case-sensitive)|
@@ -23,6 +24,7 @@ Last updated: 2023/06/03
 |Sumologic| or/and (case-insensitive)|
 
 * not
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`E | where a == "b"`|
@@ -32,6 +34,7 @@ Last updated: 2023/06/03
 |Sumologic|`!E`, `E | where a != b`|
 
 * where
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`E | where a == "b"`|
@@ -41,6 +44,7 @@ Last updated: 2023/06/03
 |Sumologic|`E | where a = "b"`|
 
 * count
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`E | summarize count() by field`|
@@ -50,6 +54,7 @@ Last updated: 2023/06/03
 |Sumologic|`E | count by field`|
 
 * distinct count
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`E | summarize dcount(field)`|
@@ -60,6 +65,7 @@ Last updated: 2023/06/03
 
 
 * contains
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`T | where field contains "word"`, has, startswith, endswith|
@@ -70,6 +76,7 @@ Last updated: 2023/06/03
 |Sumologic|`field=*word*` `"word"`|
 
 * limit
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|limit, take, top|
@@ -79,6 +86,7 @@ Last updated: 2023/06/03
 |Sumologic|limit|
 
 * wildcard extract, regex extract
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`T | extend _ProcessName=extract('"process name": "(.*"', 1, ExtendedProperties)`, `T | extend _ProcessName=extract("$.process name", ExtendedProperties)`, parse_json|
@@ -88,6 +96,7 @@ Last updated: 2023/06/03
 |Sumologic|parse, parse regex, parse json|
 
 * time slicing
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`T | summarize count() by bin(TimeGenerated, 1h), field`|
@@ -97,6 +106,7 @@ Last updated: 2023/06/03
 |Sumologic|`E | timeslice 1h | count _timeslice,field`, `E | timeslice 1h | count _timeslice,field | transpose row _timeslice column field`|
 
 * rename field
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`T | project-rename new_column_name = column_name`|
@@ -120,6 +130,7 @@ https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/ASN_L
 https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/Geo-Lookup
 
 * case-sensitivity
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`=~` (case insensitive), `==` (case sensitive)|
@@ -178,6 +189,7 @@ field name case insensitive: Sumologic
 ## Full text search
 
 * Before pipe
+
 |Platform | Howto |
 |---------|-------|
 |Azure KQL|`search "word1" or "word2"`, `search in (T) "word"`|
@@ -326,5 +338,5 @@ https://cheatography.com/tme520/cheat-sheets/sumo-logic/
 
 ## Glossary
 
-T: Table
-E: Expression
+* T: Table
+* E: Expression
