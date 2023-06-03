@@ -3,6 +3,8 @@ Last updated: 2023/06/03
 
 # Essential tables/partitions/index
 
+|Platform | Howto |
+|---------|-------|
 |Azure KQL|`* | summarize count() by $table`|
 |Elastic| `curl http://localhost:9200/_cat/indices?v`|
 |Graylog|``|
@@ -12,6 +14,8 @@ Last updated: 2023/06/03
 # Classical operators
 
 * or/and
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|or/and (case-sensitive)|
 |Graylog|or/and (case-insensitive)|
 |Kibana|or/and (case-insensitive)|
@@ -19,6 +23,8 @@ Last updated: 2023/06/03
 |Sumologic| or/and (case-insensitive)|
 
 * not
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`E | where a == "b"`|
 |Graylog|`not`|
 |Kibana| `not` (case-insensitive)|
@@ -26,6 +32,8 @@ Last updated: 2023/06/03
 |Sumologic|`!E`, `E | where a != b`|
 
 * where
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`E | where a == "b"`|
 |Elastic| |
 |Graylog|``|
@@ -33,6 +41,8 @@ Last updated: 2023/06/03
 |Sumologic|`E | where a = "b"`|
 
 * count
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`E | summarize count() by field`|
 |Elastic| |
 |Graylog|aggregation through views panel only|
@@ -40,6 +50,8 @@ Last updated: 2023/06/03
 |Sumologic|`E | count by field`|
 
 * distinct count
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`E | summarize dcount(field)`|
 |Elastic| |
 |Graylog|``|
@@ -48,6 +60,8 @@ Last updated: 2023/06/03
 
 
 * contains
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`T | where field contains "word"`, has, startswith, endswith|
 |Elastic| |
 |Graylog|`field:/.*word.*/` `"word"`|
@@ -56,6 +70,8 @@ Last updated: 2023/06/03
 |Sumologic|`field=*word*` `"word"`|
 
 * limit
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|limit, take, top|
 |Elastic||
 |Graylog||
@@ -63,6 +79,8 @@ Last updated: 2023/06/03
 |Sumologic|limit|
 
 * wildcard extract, regex extract
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`T | extend _ProcessName=extract('"process name": "(.*"', 1, ExtendedProperties)`, `T | extend _ProcessName=extract("$.process name", ExtendedProperties)`, parse_json|
 |Elastic|[JSON processor](https://www.elastic.co/guide/en/elasticsearch/reference/current/json-processor.html)|
 |Graylog||
@@ -70,6 +88,8 @@ Last updated: 2023/06/03
 |Sumologic|parse, parse regex, parse json|
 
 * time slicing
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`T | summarize count() by bin(TimeGenerated, 1h), field`|
 |Elastic| |
 |Graylog||
@@ -77,6 +97,8 @@ Last updated: 2023/06/03
 |Sumologic|`E | timeslice 1h | count _timeslice,field`, `E | timeslice 1h | count _timeslice,field | transpose row _timeslice column field`|
 
 * rename field
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`T | project-rename new_column_name = column_name`|
 |Elastic| |
 |Graylog||
@@ -98,6 +120,8 @@ https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/ASN_L
 https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/Geo-Lookup
 
 * case-sensitivity
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`=~` (case insensitive), `==` (case sensitive)|
 |Elastic| |
 |Graylog||
@@ -120,6 +144,8 @@ https://help.sumologic.com/Cloud_SIEM_Enterprise/CSE_Schema/CSE_Normalized_Class
 
 Depending on platform, those may exist all the time or not.
 
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|$table, _ResourceId, SubscriptionId, Computer, * (full message), _TimeReceived, TimeGenerated, _IsBillable|
 |Graylog||
 |Kibana|@timestamp, _time, _index, _id|
@@ -152,12 +178,16 @@ field name case insensitive: Sumologic
 # Full text search
 
 * Before pipe
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`search "word1" or "word2"`, `search in (T) "word"`|
 |Graylog|`"word1" or "word2"`|
 |Splunk|`"word1" OR "word2"`|
 |Sumologic|`"word1" or "word2"`|
 
 # Volume, eps
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|See Data collection health monitoring workbook|
 |Graylog||
 |Splunk|`index=_internal source=*metrics.log group=per_index_thruput | eval GB=kb/1024/1024 | timechart span=1d sum(GB) as GB | eval GB=round(GB,2)`, `| tstats count where index=* by  _time span=1s`|
@@ -166,12 +196,16 @@ https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index
 https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index/Log_and_Tracing_Data_Volume_Index
 
 # Last seen
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|See Data collection health monitoring workbook, `T | summarize max(TimeGenerated)`|
 |Graylog||
 |Splunk|`| tstats latest(_time) as latest where (index=* earliest=-1mon@mon  latest=-0h@h) by index host source sourcetype | convert ctime(latest)`|
 |Sumologic|`E | first(_messagetime) as last_seen1 | formatDate(fromMillis(last_seen1),"yyyy-MM-dd'T'HH:mm:ss.SSSZ") as last_seen`|
 
 # Logs Audit
+| <!-- --> | <!-- --> |
+|----------|----------|
 |Azure KQL|`LAQueryLogs` https://learn.microsoft.com/en-us/azure/sentinel/audit-sentinel-data|
 |Elastic|<clustername>_audit.json file: https://www.elastic.co/guide/en/elasticsearch/reference/current/enable-audit-logging.html, https://www.elastic.co/guide/en/elasticsearch/reference/current/auditing-search-queries.html|
 |Graylog||
