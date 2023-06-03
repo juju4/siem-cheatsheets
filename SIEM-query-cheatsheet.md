@@ -5,7 +5,7 @@ Last updated: 2023/06/03
 
 |Platform | Howto |
 |---------|-------|
-|Azure KQL| ``* | summarize count() by $table``|
+|Azure KQL| `* | summarize count() by $table`|
 |Elastic| `curl http://localhost:9200/_cat/indices?v`|
 |Graylog|``|
 |Splunk| `| tstats count where index=* by index`, `| tstats count WHERE index=* OR index=_* BY index,host`, `| eventcount summarize=false index=* | dedup index | fields index` |
