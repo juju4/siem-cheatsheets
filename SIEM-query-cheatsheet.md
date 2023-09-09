@@ -3,13 +3,59 @@ Last updated: 2023/06/03
 
 ## Essential tables/partitions/index
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL| `* | summarize count() by $table`|
-|Elastic| `curl http://localhost:9200/_cat/indices?v`|
-|Graylog|``|
-|Splunk| `| tstats count where index=* by index`, `| tstats count WHERE index=* OR index=_* BY index,host`, `| eventcount summarize=false index=* | dedup index | fields index` |
-|Sumologic| `* | count by _index`, `* | count by _sourceCategory`|
+<table>
+  <th><td>Platform</td> <td>Howto</td></th>
+<tr>
+  <td>Azure KQL</td>
+  <td>
+
+```
+* | summarize count() by $table
+```
+
+  </td>
+</tr>
+<tr>
+  <td>Elastic</td>
+  <td>
+
+```
+curl http://localhost:9200/_cat/indices?v
+```
+
+  </td>
+</tr>
+<tr>
+  <td>Graylog</td>
+  <td></td>
+</tr>
+<tr>
+  <td>Splunk</td>
+  <td>
+
+```
+| tstats count where index=* by index
+```
+```
+| tstats count WHERE index=* OR index=_* BY index,host
+```
+```
+| eventcount summarize=false index=* | dedup index | fields index
+```
+
+  </td>
+</tr>
+<tr>
+  <td>Sumologic</td>
+  <td>
+
+```
+* | count by _index`, `* | count by _sourceCategory*
+```
+
+  </td>
+</tr>
+</table>
 
 ## Classical operators
 
@@ -25,13 +71,64 @@ Last updated: 2023/06/03
 
 * not
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|`E | where a == "b"`|
-|Graylog|`not`|
-|Kibana| `not` (case-insensitive)|
-|Splunk|`field!=value`|
-|Sumologic|`!E`, `E | where a != b`|
+<table>
+  <th><td>Platform</td> <td>Howto</td></th>
+<tr>
+  <td>Azure KQL</td>
+  <td>
+
+```
+E | where a == "b"
+```
+
+  </td>
+</tr>
+<tr>
+  <td>Graylog</td>
+  <td>
+
+```
+not
+```
+
+  </td>
+</tr>
+<tr>
+  <td>Kibana</td>
+  <td>
+
+```
+not
+```
+(case-insensitive)
+
+  </td>
+</tr>
+<tr>
+  <td>Splunk</td>
+  <td>
+
+```
+field!=value
+```
+
+  </td>
+</tr>
+<tr>
+  <td>Sumologic</td>
+  <td>
+
+```
+!E
+```
+```
+E | where a != b
+```
+
+  </td>
+</tr>
+</table>
+
 
 * where
 
@@ -338,3 +435,7 @@ In production, that should never happens or nearly as else we may at risk of los
 
 * T: Table
 * E: Expression
+
+## Notes
+
+* https://stackoverflow.com/questions/28508141/code-block-inside-table-row-in-markdown
