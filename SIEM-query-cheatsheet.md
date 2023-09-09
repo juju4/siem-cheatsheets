@@ -282,7 +282,12 @@ In production, that should never happens or nearly as else we may at risk of los
 * Sumologic
   * https://support.sumologic.com/hc/en-us/articles/360034976954-Different-ways-to-purge-or-hide-sensitive-data-from-Sumo-Logic
 
+## Quota and volume management
 
+* Sentinel
+  * [Set daily cap on Log Analytics workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/daily-cap), `_LogOperation | where Category =~ "Ingestion" | where Detail contains "OverQuota"`
+* Sumologic
+  * [Ingest Budgets](https://help.sumologic.com/docs/manage/ingestion-volume/ingest-budgets/), `_index=sumologic_audit _sourceName=VOLUME_QUOTA _sourceCategory=account_management "Budget"`
 
 ## References
 
