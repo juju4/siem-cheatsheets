@@ -3,13 +3,33 @@ Last updated: 2023/09/09
 
 ## Essential tables/partitions/index
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL| `* | summarize count() by $table`|
-|Elastic| `curl http://localhost:9200/_cat/indices?v`|
-|Graylog|``|
-|Splunk| `| tstats count where index=* by index`, `| tstats count WHERE index=* OR index=_* BY index,host`, `| eventcount summarize=false index=* | dedup index | fields index` |
-|Sumologic| `* | count by _index`, `* | count by _sourceCategory`|
+
+* Azure KQL
+```
+* | summarize count() by $table
+```
+* Elastic
+```
+curl http://localhost:9200/_cat/indices?v
+```
+* Graylog
+* Splunk
+```
+| tstats count where index=* by index
+```
+```
+| tstats count WHERE index=* OR index=_* BY index,host
+```
+```
+| eventcount summarize=false index=* | dedup index | fields index
+```
+* Sumologic
+```
+* | count by _index
+```
+```
+* | count by _sourceCategory
+```
 
 ## Classical operators
 
@@ -25,13 +45,14 @@ Last updated: 2023/09/09
 
 * not
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|`E | where a == "b"`|
-|Graylog|`not`|
-|Kibana| `not` (case-insensitive)|
-|Splunk|`field!=value`|
-|Sumologic|`!E`, `E | where a != b`|
+* Azure KQL
+```
+E | where a == "b"
+```
+* Graylog: `not`
+* Kibana: `not` (case-insensitive)
+* Splunk: `field!=value`|
+* Sumologic: `!E`, `E | where a != b`
 
 * where
 
