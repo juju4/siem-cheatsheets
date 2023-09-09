@@ -206,7 +206,7 @@ https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index/Log_and
 ## Last seen
 |Platform | Howto |
 |---------|-------|
-|Azure KQL|See Data collection health monitoring workbook, `T | summarize max(TimeGenerated)`|
+|Azure KQL|See Data collection health monitoring workbook, `T | summarize min(TimeGenerated),max(TimeGenerated),count(TimeGenerated)`|
 |Graylog||
 |Splunk|`| tstats latest(_time) as latest where (index=* earliest=-1mon@mon  latest=-0h@h) by index host source sourcetype | convert ctime(latest)`|
 |Sumologic|`E | first(_messagetime) as last_seen1 | formatDate(fromMillis(last_seen1),"yyyy-MM-dd'T'HH:mm:ss.SSSZ") as last_seen`|
