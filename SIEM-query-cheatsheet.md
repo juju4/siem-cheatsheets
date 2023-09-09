@@ -33,7 +33,7 @@ curl http://localhost:9200/_cat/indices?v
 
 ## Classical operators
 
-* or/and
+### or/and
 
 |Platform | Howto |
 |---------|-------|
@@ -43,7 +43,7 @@ curl http://localhost:9200/_cat/indices?v
 |Splunk| OR/AND (case-sensitive)|
 |Sumologic| or/and (case-insensitive)|
 
-* not
+### not
 
 * Azure KQL
 ```
@@ -54,49 +54,40 @@ E | where a == "b"
 * Splunk: `field!=value`|
 * Sumologic: `!E`, `E | where a != b`
 
-* where
+### where
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|`E | where a == "b"`|
-|Elastic| |
-|Graylog|``|
-|Splunk|`E | where a = b`|
-|Sumologic|`E | where a = "b"`|
+* Azure KQL: `E | where a == "b"`
+* Elastic
+* Graylog
+* Splunk: `E | where a = b`
+* Sumologic: `E | where a = "b"`|
 
-* count
+### count
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|`E | summarize count() by field`|
-|Elastic| |
-|Graylog|aggregation through views panel only|
-|Splunk|`E | stats count BY field`|
-|Sumologic|`E | count by field`|
+* Azure KQL: `E | summarize count() by field`|
+* Elastic
+* Graylog: aggregation through views panel only
+* Splunk: `E | stats count BY field`
+* Sumologic: `E | count by field`
 
-* distinct count
+### distinct count
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|`E | summarize dcount(field)`|
-|Elastic| |
-|Graylog|``|
-|Splunk|``|
-|Sumologic|`E | count_distinct(field)`|
+* Azure KQL: `E | summarize dcount(field)`
+* Elastic
+* Graylog
+* Splunk
+* Sumologic: `E | count_distinct(field)`
 
+### contains
 
-* contains
+* Azure KQL: `T | where field contains "word"`, has, startswith, endswith
+* Elastic
+* Graylog: `field:/.*word.*/`, `"word"`
+* Kibana: `field:*word*`
+* Splunk: `field=*word*`, `"word"`
+* Sumologic: `field=*word*`, `"word"`
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|`T | where field contains "word"`, has, startswith, endswith|
-|Elastic| |
-|Graylog|`field:/.*word.*/` `"word"`|
-|Kibana|`field:*word*`|
-|Splunk|`field=*word*` `"word"`|
-|Sumologic|`field=*word*` `"word"`|
-
-* limit
+### limit
 
 |Platform | Howto |
 |---------|-------|
@@ -106,42 +97,79 @@ E | where a == "b"
 |Splunk|head, top|
 |Sumologic|limit|
 
-* wildcard extract, regex extract
+### wildcard extract, regex extract
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|`T | extend _ProcessName=extract('"process name": "(.*"', 1, ExtendedProperties)`, `T | extend _ProcessName=extract("$.process name", ExtendedProperties)`, parse_json|
-|Elastic|[JSON processor](https://www.elastic.co/guide/en/elasticsearch/reference/current/json-processor.html)|
-|Graylog||
-|Splunk|`source="some.log" Fatal | rex "(?i) msg=(?P[^,]+)"`, `source="some.log" | regex _raw=".*Fatal.*"`, [spath](https://docs.splunk.com/Documentation/Splunk/9.0.4/SearchReference/Spath), [JSON Functions](https://docs.splunk.com/Documentation/SCS/current/SearchReference/JSONFunctions)|
-|Sumologic|parse, parse regex, parse json|
+* Azure KQL
+```
+T | extend _ProcessName=extract('"process name": "(.*"', 1, ExtendedProperties)
+```
+```
+T | extend _ProcessName=extract("$.process name", ExtendedProperties)
+```
+  * parse_json
+* Elastic
+  * [JSON processor](https://www.elastic.co/guide/en/elasticsearch/reference/current/json-processor.html)
+* Graylog||
+* Splunk
+```
+source="some.log" Fatal | rex "(?i) msg=(?P[^,]+)"
+```
+```
+source="some.log" | regex _raw=".*Fatal.*"
+```
+  * [spath](https://docs.splunk.com/Documentation/Splunk/9.0.4/SearchReference/Spath)
+  * [JSON Functions](https://docs.splunk.com/Documentation/SCS/current/SearchReference/JSONFunctions)|
+* Sumologic: parse, parse regex, parse json
 
-* time slicing
+### time slicing
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|`T | summarize count() by bin(TimeGenerated, 1h), field`|
-|Elastic| |
-|Graylog||
-|Splunk|`E | bin span=1hr _time | stats count by _time`, `E | timechart count span=1hr`|
-|Sumologic|`E | timeslice 1h | count _timeslice,field`, `E | timeslice 1h | count _timeslice,field | transpose row _timeslice column field`|
+* Azure KQL
+```
+T | summarize count() by bin(TimeGenerated, 1h)
+```
+  * field
+* Elastic
+* Graylog
+* Splunk
+```
+E | bin span=1hr _time | stats count by _time
+```
+```
+E | timechart count span=1hr
+```
+* Sumologic
+```
+E | timeslice 1h | count _timeslice,field
+```
+```
+E | timeslice 1h | count _timeslice,field | transpose row _timeslice column field
+```
 
-* rename field
+### rename field
 
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|`T | project-rename new_column_name = column_name`|
-|Elastic| |
-|Graylog||
-|Splunk|`E | rename field1 as field2`|
-|Sumologic|`E | field1 as field2`|
+* Azure KQL
+```
+T | project-rename new_column_name = column_name
+```
+* Elastic
+* Graylog
+* Splunk
+```
+E | rename field1 as field2
+```
+* Sumologic
+```
+E | field1 as field2
+```
 
-* search by IP address
+### search by IP address
+
   * https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/ipv4-is-matchfunction
   * https://docs.splunk.com/Documentation/SplunkCloud/latest/SearchReference/ConditionalFunctions#cidrmatch.28.22X.22.2CY.29
   * https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/CIDR
 
-* lookup csv, ASN, geolocation
+### lookup csv, ASN, geolocation
+
   * https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/lookupoperator
   * https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/ipv4-lookup-plugin
   * https://github.com/rod-trent/SentinelKQL/blob/master/GEOIPLocation.txt
@@ -150,7 +178,7 @@ E | where a == "b"
   * https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/ASN_Lookup
   * https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/Geo-Lookup
 
-* case-sensitivity
+### case-sensitivity
 
 |Platform | Howto |
 |---------|-------|
@@ -215,23 +243,41 @@ Notes:
 |Sumologic|`"word1" or "word2"`|
 
 ## Volume, eps
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|See Data collection health monitoring workbook|
-|Graylog||
-|Splunk|`index=_internal source=*metrics.log group=per_index_thruput | eval GB=kb/1024/1024 | timechart span=1d sum(GB) as GB | eval GB=round(GB,2)`, `| tstats count where index=* by  _time span=1s`|
-|Sumologic|`_index=sumologic_volume`, `* | timeslice 1s | count _timeslice | min(_count), pct(_count,25), pct(_count,50), pct(_count,75), max(_count)`|
 
-* https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index
-* https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index/Log_and_Tracing_Data_Volume_Index
+* Azure KQL: See Data collection health monitoring workbook
+* Graylog
+* Splunk
+```
+index=_internal source=*metrics.log group=per_index_thruput | eval GB=kb/1024/1024 | timechart span=1d sum(GB) as GB | eval GB=round(GB,2)
+```
+```
+| tstats count where index=* by  _time span=1s
+```
+* Sumologic
+```
+_index=sumologic_volume
+```
+```
+* | timeslice 1s | count _timeslice | min(_count), pct(_count,25), pct(_count,50), pct(_count,75), max(_count)
+```
+  * https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index
+  * https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index/Log_and_Tracing_Data_Volume_Index
 
 ## Last seen
-|Platform | Howto |
-|---------|-------|
-|Azure KQL|See Data collection health monitoring workbook, `T | summarize min(TimeGenerated),max(TimeGenerated),count(TimeGenerated)`|
-|Graylog||
-|Splunk|`| tstats latest(_time) as latest where (index=* earliest=-1mon@mon  latest=-0h@h) by index host source sourcetype | convert ctime(latest)`|
-|Sumologic|`E | first(_messagetime) as last_seen1 | formatDate(fromMillis(last_seen1),"yyyy-MM-dd'T'HH:mm:ss.SSSZ") as last_seen`|
+
+* Azure KQL: See Data collection health monitoring workbook
+```
+T | summarize min(TimeGenerated),max(TimeGenerated),count(TimeGenerated)
+```
+* Graylog
+* Splunk
+```
+| tstats latest(_time) as latest where (index=* earliest=-1mon@mon  latest=-0h@h) by index host source sourcetype | convert ctime(latest)
+```
+* Sumologic
+```
+E | first(_messagetime) as last_seen1 | formatDate(fromMillis(last_seen1),"yyyy-MM-dd'T'HH:mm:ss.SSSZ") as last_seen
+```
 
 ## Logs Audit
 |Platform | Howto |
