@@ -163,27 +163,23 @@ Depending on platform, those may exist all the time or not.
 |Splunk|index, source, _raw, _indextime, _time|
 |Sumologic|_sourceCategory, _sourceHost, _index, _sourceName, _raw, _receipttime, _messagetime|
 
-https://docs.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns
-https://docs.splunk.com/Documentation/Splunk/latest/Data/Aboutdefaultfields
-https://help.sumologic.com/05Search/Get-Started-with-Search/Search-Basics/Built-in-Metadata
+* https://docs.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns
+* https://docs.splunk.com/Documentation/Splunk/latest/Data/Aboutdefaultfields
+* https://help.sumologic.com/05Search/Get-Started-with-Search/Search-Basics/Built-in-Metadata
 
 ## Field match
 
 Before pipe
-* key=value
-Sumologic if Field Extraction Rule (FER)
-* key:value
-Elastic, Graylog
+* Sumologic if Field Extraction Rule (FER): "key=value"
+* Elastic, Graylog: "key:value"
 
 After pipe
-* Where key == value
-Azure KQL
-* Where key = value
-Sumologic
+* Azure KQL: `where key == value`
+* Sumologic: `where key = value`
 
-Note:
-field name case sensitive: Azure KQL
-field name case insensitive: Sumologic
+Notes:
+* field name case sensitive: Azure KQL
+* field name case insensitive: Sumologic
 
 
 ## Full text search
@@ -229,9 +225,9 @@ https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index/Log_and
 Most of the time you can copy/paste the search query, but you may miss some settings like timeperiod.
 Some tools allow to share query as shortcut code or url:
 
-Kibana: [url](https://www.elastic.co/guide/en/kibana/master/reporting-getting-started.html#share-a-direct-link)
-Sentinel: [url, query or email](https://azurecloudai.blog/2021/05/26/how-to-easily-share-your-azure-sentinel-queries-with-the-community/)
-Sumologic: [_code or url](https://help.sumologic.com/docs/search/get-started-with-search/search-basics/share-link-to-search/)
+* Kibana: [url](https://www.elastic.co/guide/en/kibana/master/reporting-getting-started.html#share-a-direct-link)
+* Sentinel: [url, query or email](https://azurecloudai.blog/2021/05/26/how-to-easily-share-your-azure-sentinel-queries-with-the-community/)
+* Sumologic: [_code or url](https://help.sumologic.com/docs/search/get-started-with-search/search-basics/share-link-to-search/)
 
 ## Logs file import
 
@@ -240,31 +236,30 @@ Most of the time it is possible to import text files aka csv or json. Some platf
 Depending on target tool, you may be able to send data to any index/table or not.
 
 * Cribl
-https://docs.cribl.io/stream/usecase-replay-s3
-https://cribl.io/blog/replay-logstream-game-changer/
+  * https://docs.cribl.io/stream/usecase-replay-s3
+  * https://cribl.io/blog/replay-logstream-game-changer/
 * Elasticsearch
-https://www.elastic.co/blog/importing-csv-and-log-data-into-elasticsearch-with-file-data-visualizer
-https://discuss.elastic.co/t/import-log-file-in-elasticsearch-and-kibana/156181/2
-https://github.com/jadonn/elasticsearch-file-importer
-https://github.com/janstarke/python-evtxtools
-https://www.dragos.com/blog/industry-news/evtxtoelk-a-python-module-to-load-windows-event-logs-into-elasticsearch/
-https://github.com/dgunter/evtxtoelk
-https://github.com/sumeshi/evtx2es
-* Sentinel
-to a CustomLogs table only
-https://learn.microsoft.com/en-us/azure/azure-monitor/agents/data-sources-custom-logs
-https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/azure-sentinel-to-go-part1-a-lab-w-prerecorded-data-amp-a-custom/ba-p/1260191
-https://github.com/Cyb3rWard0g/azure-loganalytics-api-clients/blob/master/python/ala-python-data-producer.py
+  * https://www.elastic.co/blog/importing-csv-and-log-data-into-elasticsearch-with-file-data-visualizer
+  * https://discuss.elastic.co/t/import-log-file-in-elasticsearch-and-kibana/156181/2
+  * https://github.com/jadonn/elasticsearch-file-importer
+  * https://github.com/janstarke/python-evtxtools
+  * https://www.dragos.com/blog/industry-news/evtxtoelk-a-python-module-to-load-windows-event-logs-into-elasticsearch/
+  * https://github.com/dgunter/evtxtoelk
+  * https://github.com/sumeshi/evtx2es
+* Sentinel: to a CustomLogs table only
+  * https://learn.microsoft.com/en-us/azure/azure-monitor/agents/data-sources-custom-logs
+  * https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/azure-sentinel-to-go-part1-a-lab-w-prerecorded-data-amp-a-custom/ba-p/1260191
+  * https://github.com/Cyb3rWard0g/azure-loganalytics-api-clients/blob/master/python/ala-python-data-producer.py
 * Splunk
-https://docs.splunk.com/Documentation/Splunk/9.0.4/Data/Extractfieldsfromfileswithstructureddata
-https://hurricanelabs.com/splunk-tutorials/ingesting-a-csv-file-into-splunk/
-https://community.splunk.com/t5/Getting-Data-In/Why-is-my-sourcetype-not-parsing-as-CSV-and-am-getting-two/td-p/244469
-https://michael-gale.medium.com/upload-files-into-splunk-through-the-api-6aa9ca912545
-https://docs.splunk.com/Documentation/Splunk/9.0.4/Data/MonitorWindowseventlogdata#Index_exported_event_log_files
-https://community.splunk.com/t5/Getting-Data-In/Windows-Event-Log-evtx-file-import-Foriegn-AD-Domain/m-p/557628
+  * https://docs.splunk.com/Documentation/Splunk/9.0.4/Data/Extractfieldsfromfileswithstructureddata
+  * https://hurricanelabs.com/splunk-tutorials/ingesting-a-csv-file-into-splunk/
+  * https://community.splunk.com/t5/Getting-Data-In/Why-is-my-sourcetype-not-parsing-as-CSV-and-am-getting-two/td-p/244469
+  * https://michael-gale.medium.com/upload-files-into-splunk-through-the-api-6aa9ca912545
+  * https://docs.splunk.com/Documentation/Splunk/9.0.4/Data/MonitorWindowseventlogdata#Index_exported_event_log_files
+  * https://community.splunk.com/t5/Getting-Data-In/Windows-Event-Log-evtx-file-import-Foriegn-AD-Domain/m-p/557628
 * Sumologic
-https://help.sumologic.com/docs/send-data/installed-collectors/sources/local-file-source/
-https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/upload-logs/
+  * https://help.sumologic.com/docs/send-data/installed-collectors/sources/local-file-source/
+  * https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/logs-metrics/upload-logs/
 
 
 ## Data purging
@@ -309,32 +304,30 @@ In production, that should never happens or nearly as else we may at risk of los
   * [Event Query Language (EQL) syntax reference](https://www.elastic.co/guide/en/elasticsearch/reference/current/eql-syntax.html)
   * [Example: Detect threats with EQL](https://www.elastic.co/guide/en/elasticsearch/reference/current/eql-ex-threat-detection.html)
 
-* Graylog
-https://go2docs.graylog.org/5-0/making_sense_of_your_log_data/writing_search_queries.html
-  no standardize "schema"/_sourceCategory: application_name under linux vs @metadata_beat/win, source=hostname, event_provider=win event channels
-  gl2_source_input:"608843ff98bb330cce5a5ea5" AND winlog_event_data_CommandLine:/powershell/
-  timestamp:["2020-08-01 00:00:00.000" TO "2020-09-01 00:00:00.000"]
-  source:"ACC\-05" && event_task_desc:"File created (rule: FileCreate)"
-  source:"ACC\-05" && event_id:11 && DEFCATZ
-  source:"ACC\-05" && log_source_name:Microsoft-Windows-Sysmon
-  event_type:zeek AND 31.7.109.216
+* Graylog [Writing Search Queries](https://go2docs.graylog.org/5-1/making_sense_of_your_log_data/writing_search_queries.html
+  * no standardize "schema"/_sourceCategory: application_name under linux vs @metadata_beat/win, source=hostname, event_provider=win event channels
+  * `gl2_source_input:"608843ff98bb330cce5a5ea5" AND winlog_event_data_CommandLine:/powershell/`
+  * `timestamp:["2020-08-01 00:00:00.000" TO "2020-09-01 00:00:00.000"]`
+  * `source:"ACC\-05" && event_task_desc:"File created (rule: FileCreate)"`
+  * `source:"ACC\-05" && event_id:11 && DEFCATZ`
+  * `source:"ACC\-05" && log_source_name:Microsoft-Windows-Sysmon`
+  * `event_type:zeek AND 31.7.109.216`
 
-* Splunk
-https://docs.splunk.com/Documentation/SplunkCloud/9.0.2303/SearchReference/WhatsInThisManual
-  index=*-win EventCode=1
-  index=attack  | top limit=200 "Test Name"
-  index=*-win EventCode=1 process_name!=splunk*.exe CommandLine=*Audio*
-  index=* sourcetype=bro* sourcetype="bro:x509:json" "CN=win-dc-748.attackrange.local" | stats count by certificate.subject, certificate.serialindex=* sourcetype=bro* sourcetype="bro:x509:json" "CN=win-dc-748.attackrange.local"
-  https://gist.github.com/domanchi/12daa99ee023c4e9644ab56f14d21fd7
-  https://docs.google.com/spreadsheets/d/1RTcZsRbDsjxwmKpe3FIvSKUjBk5pR2Dlzj71QTnxAK0/edit#gid=0 Crowdstrike Splunk Threat Hunting Searches
-  https://github.com/pe3zx/crowdstrike-falcon-queries
-https://www.splunk.com/en_us/blog/tips-and-tricks/how-to-determine-when-a-host-stops-sending-logs-to-splunk-expeditiously.html
+* Splunk [Welcome to the Search Reference](https://docs.splunk.com/Documentation/SplunkCloud/9.0.2303/SearchReference/WhatsInThisManual)
+  * `index=*-win EventCode=1`
+  * `index=attack  | top limit=200 "Test Name"`
+  * `index=*-win EventCode=1 process_name!=splunk*.exe CommandLine=*Audio*`
+  * `index=* sourcetype=bro* sourcetype="bro:x509:json" "CN=win-dc-748.attackrange.local" | stats count by certificate.subject, certificate.serialindex=* sourcetype=bro* sourcetype="bro:x509:json" "CN=win-dc-748.attackrange.local"`
+  * https://gist.github.com/domanchi/12daa99ee023c4e9644ab56f14d21fd7
+  * https://docs.google.com/spreadsheets/d/1RTcZsRbDsjxwmKpe3FIvSKUjBk5pR2Dlzj71QTnxAK0/edit#gid=0 Crowdstrike Splunk Threat Hunting Searches
+  * https://github.com/pe3zx/crowdstrike-falcon-queries
+  * https://www.splunk.com/en_us/blog/tips-and-tricks/how-to-determine-when-a-host-stops-sending-logs-to-splunk-expeditiously.html
 
 * Sumologic
-https://help.sumologic.com/05Search/Search-Cheat-Sheets/General-Search-Examples-Cheat-Sheet
-https://help.sumologic.com/05Search/Search-Cheat-Sheets/Log-Operators-Cheat-Sheet
-https://help.sumologic.com/05Search/Search-Cheat-Sheets/grep-to-Searching-with-Sumo-Cheat-Sheet
-https://cheatography.com/tme520/cheat-sheets/sumo-logic/
+  * https://help.sumologic.com/05Search/Search-Cheat-Sheets/General-Search-Examples-Cheat-Sheet
+  * https://help.sumologic.com/05Search/Search-Cheat-Sheets/Log-Operators-Cheat-Sheet
+  * https://help.sumologic.com/05Search/Search-Cheat-Sheets/grep-to-Searching-with-Sumo-Cheat-Sheet
+  * https://cheatography.com/tme520/cheat-sheets/sumo-logic/
 
 ## Glossary
 
