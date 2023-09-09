@@ -1,5 +1,5 @@
 # SIEM/Logging query cheatsheet
-Last updated: 2023/06/03
+Last updated: 2023/09/09
 
 ## Essential tables/partitions/index
 
@@ -116,18 +116,18 @@ Last updated: 2023/06/03
 |Sumologic|`E | field1 as field2`|
 
 * search by IP address
-https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/ipv4-is-matchfunction
-https://docs.splunk.com/Documentation/SplunkCloud/latest/SearchReference/ConditionalFunctions#cidrmatch.28.22X.22.2CY.29
-https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/CIDR
+  * https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/ipv4-is-matchfunction
+  * https://docs.splunk.com/Documentation/SplunkCloud/latest/SearchReference/ConditionalFunctions#cidrmatch.28.22X.22.2CY.29
+  * https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/CIDR
 
 * lookup csv, ASN, geolocation
-https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/lookupoperator
-https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/ipv4-lookup-plugin
-https://github.com/rod-trent/SentinelKQL/blob/master/GEOIPLocation.txt
-https://docs.splunk.com/Documentation/SplunkCloud/8.2.2202/SearchReference/Iplocation
-https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/lookup
-https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/ASN_Lookup
-https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/Geo-Lookup
+  * https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/lookupoperator
+  * https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/ipv4-lookup-plugin
+  * https://github.com/rod-trent/SentinelKQL/blob/master/GEOIPLocation.txt
+  * https://docs.splunk.com/Documentation/SplunkCloud/8.2.2202/SearchReference/Iplocation
+  * https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/lookup
+  * https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/ASN_Lookup
+  * https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/Geo-Lookup
 
 * case-sensitivity
 
@@ -200,8 +200,9 @@ Notes:
 |Graylog||
 |Splunk|`index=_internal source=*metrics.log group=per_index_thruput | eval GB=kb/1024/1024 | timechart span=1d sum(GB) as GB | eval GB=round(GB,2)`, `| tstats count where index=* by  _time span=1s`|
 |Sumologic|`_index=sumologic_volume`, `* | timeslice 1s | count _timeslice | min(_count), pct(_count,25), pct(_count,50), pct(_count,75), max(_count)`|
-https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index
-https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index/Log_and_Tracing_Data_Volume_Index
+
+* https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index
+* https://help.sumologic.com/Manage/Ingestion-and-Volume/Data_Volume_Index/Log_and_Tracing_Data_Volume_Index
 
 ## Last seen
 |Platform | Howto |
