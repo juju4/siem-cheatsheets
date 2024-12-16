@@ -1,5 +1,5 @@
 # SIEM/Logging query cheatsheet
-Last updated: 2023/09/09
+Last updated: 2024/12/15
 
 ## Essential tables/partitions/index
 
@@ -13,6 +13,10 @@ Last updated: 2023/09/09
 curl http://localhost:9200/_cat/indices?v
 ```
 * Graylog
+* OpenObserve
+```
+curl http://localhost:5080/api/{org_id}/streams
+```
 * Splunk
 ```
 | tstats count where index=* by index
@@ -40,6 +44,7 @@ curl http://localhost:9200/_cat/indices?v
 |Azure KQL|or/and (case-sensitive)|
 |Graylog|or/and (case-insensitive)|
 |Kibana|or/and (case-insensitive)|
+|OpenObserve|or/and (SQL)|
 |Splunk| OR/AND (case-sensitive)|
 |Sumologic| or/and (case-insensitive)|
 
@@ -51,6 +56,7 @@ E | where a == "b"
 ```
 * Graylog: `not`
 * Kibana: `not` (case-insensitive)
+* OpenObserve: like in SQL
 * Splunk: `field!=value`|
 * Sumologic: `!E`, `E | where a != b`
 
@@ -59,6 +65,7 @@ E | where a == "b"
 * Azure KQL: `E | where a == "b"`
 * Elastic
 * Graylog
+* OpenObserve: like in SQL
 * Splunk: `E | where a = b`
 * Sumologic: `E | where a = "b"`|
 
@@ -67,6 +74,7 @@ E | where a == "b"
 * Azure KQL: `E | summarize count() by field`|
 * Elastic
 * Graylog: aggregation through views panel only
+* OpenObserve: count() like in SQL
 * Splunk: `E | stats count BY field`
 * Sumologic: `E | count by field`
 
@@ -75,6 +83,7 @@ E | where a == "b"
 * Azure KQL: `E | summarize dcount(field)`
 * Elastic
 * Graylog
+* OpenObserve: does not seem implemented
 * Splunk
 * Sumologic: `E | count_distinct(field)`
 
@@ -84,6 +93,7 @@ E | where a == "b"
 * Elastic
 * Graylog: `field:/.*word.*/`, `"word"`
 * Kibana: `field:*word*`
+* OpenObserve: `SELECT * FROM "stream" WHERE field like '%word%'` (SQL)
 * Splunk: `field=*word*`, `"word"`
 * Sumologic: `field=*word*`, `"word"`
 
@@ -94,6 +104,7 @@ E | where a == "b"
 |Azure KQL|limit, take, top|
 |Elastic||
 |Graylog||
+|OpenObserve| LIMIT (SQL)|
 |Splunk|head, top|
 |Sumologic|limit|
 
@@ -109,6 +120,9 @@ T | extend _ProcessName=extract("$.process name", ExtendedProperties)
   * parse_json
 * Elastic
   * [JSON processor](https://www.elastic.co/guide/en/elasticsearch/reference/current/json-processor.html)
+* OpenObserve
+  * [re_match, re_not_match](https://openobserve.ai/docs/functions/#re_matchfield-pattern)
+  * [spath on json](https://openobserve.ai/docs/functions/#spath)
 * Graylog||
 * Splunk
 ```
@@ -130,6 +144,10 @@ T | summarize count() by bin(TimeGenerated, 1h)
   * field
 * Elastic
 * Graylog
+* OpenObserve
+```
+SELECT histogram(_timestamp, '60 minutes') AS key, field, COUNT(*) AS num FROM "{stream}" GROUP BY key,field ORDER BY key
+```
 * Splunk
 ```
 E | bin span=1hr _time | stats count by _time
@@ -153,6 +171,7 @@ T | project-rename new_column_name = column_name
 ```
 * Elastic
 * Graylog
+* OpenObserve: 'name1 AS name2' (SQL) or [VRL](https://vector.dev/docs/reference/vrl/)
 * Splunk
 ```
 E | rename field1 as field2
@@ -173,6 +192,7 @@ E | field1 as field2
   * https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/lookupoperator
   * https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/ipv4-lookup-plugin
   * https://github.com/rod-trent/SentinelKQL/blob/master/GEOIPLocation.txt
+  * OpenObserve: [VRL IP functions](https://vector.dev/docs/reference/vrl/functions/#ip_cidr_contains)
   * https://docs.splunk.com/Documentation/SplunkCloud/8.2.2202/SearchReference/Iplocation
   * https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/lookup
   * https://help.sumologic.com/05Search/Search-Query-Language/Search-Operators/ASN_Lookup
@@ -185,6 +205,7 @@ E | field1 as field2
 |Azure KQL|`=~` (case insensitive), `==` (case sensitive)|
 |Elastic| |
 |Graylog||
+|OpenObserve|`LIKE` (insensitive), '=' (sensitive) like in SQL|
 |Splunk||
 |Sumologic|first line case insensitive, case sensitive after pipe|
 
@@ -194,6 +215,7 @@ E | field1 as field2
 https://docs.microsoft.com/en-us/azure/sentinel/normalization
 * Elastic Common Schema
 https://www.elastic.co/guide/en/ecs/current/index.html
+* OpenObserve: no common schema/model defined. fields can be remapped with VRL
 * Splunk Common Information Model
 https://docs.splunk.com/Documentation/CIM/5.1.1/User/Overview
 * Sumologic: Core fields definition up to administrator (Field Extraction Rule aka FER), CSE normalized
@@ -209,6 +231,7 @@ Depending on platform, those may exist all the time or not.
 |Azure KQL|$table, _ResourceId, SubscriptionId, Computer, * (full message), _TimeReceived, TimeGenerated, _IsBillable|
 |Graylog||
 |Kibana|@timestamp, _time, _index, _id|
+|OpenObserve|_timestamp|
 |Splunk|index, source, _raw, _indextime, _time|
 |Sumologic|_sourceCategory, _sourceHost, _index, _sourceName, _raw, _receipttime, _messagetime|
 
@@ -239,6 +262,7 @@ Notes:
 |---------|-------|
 |Azure KQL|`search "word1" or "word2"`, `search in (T) "word"`|
 |Graylog|`"word1" or "word2"`|
+|OpenObserve|`select * from "{stream}" where match_all('word')` or [match_all_raw](https://openobserve.ai/docs/functions/#match_all_rawv)|
 |Splunk|`"word1" OR "word2"`|
 |Sumologic|`"word1" or "word2"`|
 
@@ -246,6 +270,7 @@ Notes:
 
 * Azure KQL: See Data collection health monitoring workbook
 * Graylog
+* OpenObserve: ?
 * Splunk
 ```
 index=_internal source=*metrics.log group=per_index_thruput | eval GB=kb/1024/1024 | timechart span=1d sum(GB) as GB | eval GB=round(GB,2)
@@ -270,6 +295,7 @@ _index=sumologic_volume
 T | summarize min(TimeGenerated),max(TimeGenerated),count(TimeGenerated)
 ```
 * Graylog
+* OpenObserve: only [`_timestamp` field with variable definition](https://openobserve.ai/docs/user-guide/concepts/#timestamp)
 * Splunk
 ```
 | tstats latest(_time) as latest where (index=* earliest=-1mon@mon  latest=-0h@h) by index host source sourcetype | convert ctime(latest)
@@ -284,6 +310,7 @@ E | first(_messagetime) as last_seen1 | formatDate(fromMillis(last_seen1),"yyyy-
 |---------|-------|
 |Azure KQL|`LAQueryLogs` https://learn.microsoft.com/en-us/azure/sentinel/audit-sentinel-data|
 |Elastic|<clustername>_audit.json file: https://www.elastic.co/guide/en/elasticsearch/reference/current/enable-audit-logging.html, https://www.elastic.co/guide/en/elasticsearch/reference/current/auditing-search-queries.html|
+|OpenObserve| O2_AUDIT_ENABLED (Enterprise only)|
 |Graylog||
 |Splunk|`index=_audit` https://docs.splunk.com/Documentation/Splunk/9.0.4/Security/AuditSplunkactivity|
 |Sumologic|`_view=sumologic_search_usage_per_query`, `index=sumologic_audit` https://help.sumologic.com/docs/manage/security/audit-index/|
@@ -294,6 +321,7 @@ Most of the time you can copy/paste the search query, but you may miss some sett
 Some tools allow to share query as shortcut code or url:
 
 * Kibana: [url](https://www.elastic.co/guide/en/kibana/master/reporting-getting-started.html#share-a-direct-link)
+* OpenObserve: url
 * Sentinel: [url, query or email](https://azurecloudai.blog/2021/05/26/how-to-easily-share-your-azure-sentinel-queries-with-the-community/)
 * Sumologic: [_code or url](https://help.sumologic.com/docs/search/get-started-with-search/search-basics/share-link-to-search/)
 
@@ -314,6 +342,7 @@ Depending on target tool, you may be able to send data to any index/table or not
   * https://www.dragos.com/blog/industry-news/evtxtoelk-a-python-module-to-load-windows-event-logs-into-elasticsearch/
   * https://github.com/dgunter/evtxtoelk
   * https://github.com/sumeshi/evtx2es
+* OpenObserve: no contextual example but usual data source applies (curl, filebeat, syslog...)
 * Sentinel: to a CustomLogs table only
   * https://learn.microsoft.com/en-us/azure/azure-monitor/agents/data-sources-custom-logs
   * https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/azure-sentinel-to-go-part1-a-lab-w-prerecorded-data-amp-a-custom/ba-p/1260191
@@ -339,6 +368,7 @@ In production, that should never happens or nearly as else we may at risk of los
   * https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html
   * https://discuss.elastic.co/t/delete-all-data-from-index-without-deleting-index/87661/8
   * https://docs.securityonion.net/en/2.3/so-elasticsearch-query.html#examples (not supporting wildcards)
+* OpenObserve: ?
 * Sentinel
   * https://learn.microsoft.com/en-us/rest/api/loganalytics/workspace-purge/purge?tabs=HTTP
   * https://learn.microsoft.com/en-us/azure/azure-monitor/logs/personal-data-mgmt#how-to-export-and-delete-private-data
@@ -385,6 +415,10 @@ In production, that should never happens or nearly as else we may at risk of los
   * `source:"ACC\-05" && event_id:11 && DEFCATZ`
   * `source:"ACC\-05" && log_source_name:Microsoft-Windows-Sysmon`
   * `event_type:zeek AND 31.7.109.216`
+
+* OpenObserve
+  * https://openobserve.ai/docs/
+  * https://vector.dev/docs/reference/vrl/
 
 * Splunk [Welcome to the Search Reference](https://docs.splunk.com/Documentation/SplunkCloud/9.0.2303/SearchReference/WhatsInThisManual)
   * `index=*-win EventCode=1`
